@@ -11,7 +11,12 @@ program PNGTest;
 {  To compile your program select Run, Compile (or Run, Build) from the menu.  }
 
 uses
+  {$IFDEF QEMUVPB}
+  QEMUVersatilePB,
+  {$ENDIF}
+  {$IFDEF RPI3}
   RaspberryPi3,
+  {$ENDIF}
   GlobalConfig,
   GlobalConst,
   GlobalTypes,
@@ -109,7 +114,7 @@ begin
       t := Copy (s, 1, si);
       Canvas.DrawText (20, 100, t, 'arial', 24, COLOR_WHITE, 200);
     end;
-  Canvas.Draw (DefFrameBuff, (FrameProps.PhysicalWidth div 2) + 2, (FrameProps.PhysicalHeight div 2) + 2);
+  Canvas.Flush (DefFrameBuff, (FrameProps.PhysicalWidth div 2) + 2, (FrameProps.PhysicalHeight div 2) + 2);
 end;
 
 { THelper }
@@ -173,7 +178,11 @@ begin
     begin
       Log ('Buffer Colour Format ' + FrameProps.Format.ToString + ' Depth ' + FrameProps.Depth.ToString + ' Size ' + Frameprops.Size.ToString);
       Log ('Buffer Width ' + FrameProps.PhysicalWidth.ToString + ' Height ' + FrameProps.PhysicalHeight.ToString);
+      {$IFDEF QEMUVPB}
+      FBFormat := COLOR_FORMAT_DEFAULT;
+      {$ELSE}
       FBFormat := FrameProps.Format;
+      {$ENDIF}
     end
   else
     Log ('failed to get props');
@@ -267,7 +276,7 @@ begin
               Rect := SetRect (39, 40, 30 + 39, 20 + 40);
               Canvas.Fill (Rect, COLOR_BROWN);
               Canvas.DrawText (20, 20, 'How is it going', 'arial', 24, COLOR_BLUE);
-              Canvas.Draw (DefFrameBuff, (FrameProps.PhysicalWidth div 2) + 2, (FrameProps.PhysicalHeight div 2) + 2);
+              Canvas.Flush (DefFrameBuff, (FrameProps.PhysicalWidth div 2) + 2, (FrameProps.PhysicalHeight div 2) + 2);
             end;
         end;
     end;
